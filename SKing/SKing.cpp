@@ -37,6 +37,50 @@ namespace sk
 		return os;
 	}
 
+	istream& operator>>(istream& is, Int& i)
+	{
+		char t{};
+		string temp{};
+		bool negative{ false };
+		
+		while (is.get(t))
+		{
+			if ((t == ' ' || t == '\n') && temp.size() != 0)
+			{
+				break;
+			}
+			
+			if (t == '-' && negative == false)
+			{
+				negative = true;
+				continue;
+			}
+
+			if (t - '0' >= 0 && t - '0' <= 9)
+			{
+				temp += t;
+			}
+			else
+			{
+				if (temp.size() == 0 && !(t == '\n' || t == ' '))
+				{
+					is.setstate(ios_base::failbit);
+				}
+				if (t != '\n' && t != ' ')
+				{
+					is.putback(t);
+					break;
+				}
+			}
+		}
+		if (negative)
+		{
+			temp.insert(0, "-");
+		}
+		i = Int(temp);
+		return is;
+	}
+
 	int randomseed()
 	{
 		return saved_seed;
@@ -249,7 +293,7 @@ namespace sk
 		}
 		elif(this->is_negative_number())
 		{
-			result = sub(t.erase(0,1), o);
+			result = sub(o, t.erase(0, 1));
 		}
 		elif(other.is_negative_number())
 		{

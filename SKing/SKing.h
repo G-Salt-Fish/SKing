@@ -85,6 +85,7 @@ namespace sk
 		
 		friend Int operator+(const string&, const Int&);
 		friend ostream& operator<<(ostream&, const Int&);
+		friend istream& operator>>(istream&, Int&);
 
 		string get(void);
 	};
