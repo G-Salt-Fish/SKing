@@ -28,7 +28,7 @@ namespace sk
 
 	Int operator+(const string& s, const Int& i)
 	{
-		return i + s;
+		return i + Int(s);
 	}
 
 	ostream& operator<<(ostream& os, const Int& i)
@@ -42,20 +42,17 @@ namespace sk
 		char t{};
 		string temp{};
 		bool negative{ false };
-		
 		while (is.get(t))
 		{
 			if ((t == ' ' || t == '\n') && temp.size() != 0)
 			{
 				break;
 			}
-			
 			if (t == '-' && negative == false)
 			{
 				negative = true;
 				continue;
 			}
-
 			if (t - '0' >= 0 && t - '0' <= 9)
 			{
 				temp += t;
@@ -267,6 +264,23 @@ namespace sk
 		return result;
 	}
 
+	string Int::simplex(const string& s, const char c) const
+	{
+		int temp{};
+		string result{};
+		for (size_t i = s.size() - 1; i >= 0; i--)
+		{
+			int new_temp = temp + (s[i] - '0') * (c - '0');
+			result.insert(0, 1, char(new_temp % 10 + '0'));
+			temp = new_temp / 10;
+			if (i == 0)
+			{
+				break;
+			}
+		}
+		return result;
+	}
+
 	Int::Int()
 	{
 	}
@@ -304,7 +318,7 @@ namespace sk
 			result = add(t, o);
 		}
 
-		return result;
+		return Int(result);
 	}
 
 	Int Int::operator-(const Int& other) const
@@ -330,7 +344,7 @@ namespace sk
 		{
 			result = sub(t, o);
 		}
-		return result;
+		return Int(result);
 	}
 
 	Int Int::operator-(void) const
@@ -351,7 +365,68 @@ namespace sk
 	Int Int::operator=(const char* c) const
 	{
 		string s{ c };
-		return s;
+		return Int(s);
+	}
+
+	Int Int::operator*(const Int& other) const
+	{
+		
+		return Int();
+	}
+
+	bool Int::operator>(const Int& other) const
+	{
+		if (this->is_negative_number() && other.is_negative_number())
+		{
+			return value.substr(1) < other.value.substr(1);
+		}
+		else if (this->is_negative_number() && !other.is_negative_number())
+		{
+			return false;
+		}
+		else if (!this->is_negative_number() && other.is_negative_number())
+		{
+			return true;
+		}
+		else
+		{
+			return value > other.value;
+		}
+	}
+
+	bool Int::operator>=(const Int& other) const
+	{
+		if (this->is_negative_number() && other.is_negative_number())
+		{
+			return value.substr(1) <= other.value.substr(1);
+		}
+		else if (this->is_negative_number() && !other.is_negative_number())
+		{
+			return false;
+		}
+		else if (!this->is_negative_number() && other.is_negative_number())
+		{
+			return true;
+		}
+		else
+		{
+			return value >= other.value;
+		}
+	}
+
+	bool Int::operator<(const Int& other) const
+	{
+		return !operator>=(other);
+	}
+
+	bool Int::operator<=(const Int& other) const
+	{
+		return !operator>(other);
+	}
+
+	bool Int::operator==(const Int& other) const
+	{
+		return value == other.value;
 	}
 
 	Int::operator string() const

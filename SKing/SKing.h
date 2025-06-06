@@ -39,7 +39,8 @@ namespace sk
 
 	#define elif else if
 
-	#define sleep(T) this_thread::sleep_for(chrono::milliseconds(T))
+	template<typename T>
+	constexpr auto sleep(T t) { return this_thread::sleep_for(chrono::milliseconds(t)); }
 
 	using Uint = unsigned int;
 
@@ -69,21 +70,29 @@ namespace sk
 			void remove_leading_zeros(void);
 			string add(const string& s, const string& t) const;
 			string sub(const string& s, const string& t) const;
+			string simplex(const string& s, const char c) const;
 			inline bool is_negative_number(const string& s) const { return s[0] == '-' ? true : false; }
 			inline bool is_negative_number() const { return value[0] == '-' ? true : false; }
+
 	public:
 		Int();
-		Int(string);
+		explicit Int(string);
 		Int(long long);
 
 		Int operator+(const Int& other) const;
 		Int operator-(const Int& other) const;
 		Int operator-(void) const;
 		Int operator=(const char*) const;
+		Int operator*(const Int& other) const;
+		bool operator>(const Int& other) const;
+		bool operator>=(const Int& other) const;
+		bool operator<(const Int& other) const;
+		bool operator<=(const Int& other) const;
+		bool operator==(const Int& other) const;
+
 
 		operator string() const;
 		
-		friend Int operator+(const string&, const Int&);
 		friend ostream& operator<<(ostream&, const Int&);
 		friend istream& operator>>(istream&, Int&);
 
